@@ -1,0 +1,33 @@
+{
+  "name": "koa-reactssr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Koa",
+    "SSR",
+    "React",
+    "middleware"
+  ],
+  "author": "Evont Ng <evontgoh@foxmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-preset-env": "^1.7.0",
+    "koa": "^2.6.2",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-loadable": "^5.5.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0"
+  }
+}
