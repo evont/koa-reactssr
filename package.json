@@ -19,13 +19,17 @@
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "babel-loader": "^8.0.4",
     "babel-preset-env": "^1.7.0",
     "koa": "^2.6.2",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-loadable": "^5.5.0"
+    "react-loadable": "^5.5.0",
+    "webpack": "^4.25.1",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-hot-middleware": "^2.24.3"
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0"

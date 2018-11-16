@@ -1,0 +1,11 @@
+{
+  "template": "./src/index.template.html",
+  "output": {
+    "path": "./dist",
+    "publicPath": "/"
+  },
+  "entry": {
+    "client": "./src/entry-client.js",
+    "server": "./src/entry-server.js"
+  }
+}
