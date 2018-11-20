@@ -28,7 +28,7 @@ function koaHotMiddleware(expressHotMiddleware) {
 }
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
 const { webpackConfig = {} } = ssrconfig;
-
+const Module = module.constructor;
 module.exports = function setupDevServer(app, templatePath, cb) {
   const { client, server } = webpackConfig;
   let clientConfig = require(client ? path.resolve(process.cwd(), client) : './webpack.client.conf');
@@ -49,9 +49,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   const update = () => {
     if (bundle) {
       ready()
-      cb(bundle, {
-        template,
-      })
+      cb(bundle, template)
     }
   }
 
@@ -80,8 +78,8 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   app.use(koaDevMiddleware(dmw));
   clientCompiler.plugin('done', stats => {
     stats = stats.toJson()
-    stats.errors.forEach(err => console.error(err))
-    stats.warnings.forEach(err => console.warn(err))
+    // stats.errors.forEach(err => console.error(err))
+    // stats.warnings.forEach(err => console.warn(err))
     if (stats.errors.length) return
     update()
   })
@@ -98,10 +96,11 @@ module.exports = function setupDevServer(app, templatePath, cb) {
     stats = stats.toJson()
     if (stats.errors.length) return
     const bundlePath = path.join(serverConfig.output.path, serverConfig.output.filename);
-    // 获取打包完成的js文件（注：文件是在内存中而非硬盘中，类比webpack-dev-server的文件）
-    // 此时获得的是字符串，并非可执行的js，我们需要进行转换
     bundle = mfs.readFileSync(bundlePath, 'utf-8');
-
+    const m = new Module();
+    m._compile(bundle, 'entry-server.js');
+    bundle = m.exports.default;
+    // bundle = mfs.readFileSync(bundlePath, 'utf-8');
     update()
   })
   return readyPromise;

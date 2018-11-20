@@ -23,34 +23,28 @@ function extend(obj, obj2) {
   return newObj;
 }
 
-function render(title, ctx) {
+function render(content, ctx) {
   ctx.set('Content-Type', 'text/html')
-  const handleError = err => {
-    if (err.url) {
-      ctx.redirect(err.url)
-    } else if(err.code === 404) {
-      // ctx.throw(404, '404 | Page Not Found')
-      ctx.body = 'Page Not Found';
-    } else {
-      // Render Error Page or Redirect
-     //  ctx.throw(500, '500 | Internal Server Error')
-      console.error(err);
-      ctx.body = 'Internal Server Error';
-    }
-  }
+  // const handleError = err => {
+  //   if (err.url) {
+  //     ctx.redirect(err.url)
+  //   } else if(err.code === 404) {
+  //     // ctx.throw(404, '404 | Page Not Found')
+  //     ctx.body = 'Page Not Found';
+  //   } else {
+  //     // Render Error Page or Redirect
+  //    //  ctx.throw(500, '500 | Internal Server Error')
+  //     console.error(err);
+  //     ctx.body = 'Internal Server Error';
+  //   }
+  // }
   return new Promise((resolve, reject) => {
-    const context = {
-      title,
-      url: ctx.url
-    }
-    renderer.renderToString(context, (err, html) => {
-      if (err) {
-        reject(err);
-      } else {
-        ctx.body = html;
-        resolve();
-      }
-    })
+    // const context = {
+    //   title,
+    //   url: ctx.url
+    // }
+    ctx.body = content;
+    resolve();
   }).catch((error) => {
     handleError(error);
   })
@@ -77,20 +71,24 @@ module.exports = (app, options) => {
   };
 
   const settings = extend(defaultSetting, options);
-  
+  let content;
   let readyPromise;
   if (!settings.isProd) {
     readyPromise = require('./build/setup-dev-server')(
       app,
       templatePath,
+      (bundle, template) => {
+        content = template.replace(/<!-- react app -->/, ReactSSR.renderToString(bundle));
+      }
     )
   }
   
   return async function ssr (ctx) {
     if (settings.isProd) {
-      await render(settings.title, ctx);
+      ReactSSR.renderToString(bundle);
+      await render(settings.title, ctx);                                                                        
     } else {
-      await readyPromise.then(() => render(settings.title, ctx));
+      await readyPromise.then(() => render(content, ctx));
     }
   }
 }

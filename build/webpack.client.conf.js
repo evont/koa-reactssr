@@ -3,6 +3,7 @@ const webpack = require('webpack');
 // 判断当前环境 根据环境不同采取不同的webpack配置 在命令行中设置当前环境 要通过cross-env这个包来保证linux mac win三个平台配置一致
 const isDev = process.env.NODE_ENV === 'development';
 const config = {
+  mode: 'none',
   entry: {
     app: path.join(__dirname, '../src/entry-client.js')
   },
