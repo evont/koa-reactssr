@@ -12,12 +12,11 @@ const render = Component => {
 
 render(App);
 
-// if (module.hot) {
-//   module
-//     .hot
-//     .accept('./App.jsx', () => {
-//       const NextApp = require('./App.jsx').default;
-//       // ReactDOM.hydrate(   <NextApp />, document.getElementById('root'));
-//       render(NextApp);
-//     })
-// }
+if (module.hot) {
+  module
+    .hot
+    .accept('./App.jsx', () => {
+      const NextApp = require('./App.jsx').default;
+      render(NextApp);
+    })
+}

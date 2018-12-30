@@ -55,7 +55,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
 
   template = fs.readFileSync(templatePath, 'utf-8');
   
-  clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
+  clientConfig.entry.app = ['react-hot-loader/patch', clientConfig.entry.app]
   clientConfig.output.filename = '[name].js'
   clientConfig.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
@@ -78,6 +78,7 @@ module.exports = function setupDevServer(app, templatePath, cb) {
   app.use(koaDevMiddleware(dmw));
   clientCompiler.plugin('done', stats => {
     stats = stats.toJson()
+    console.log(clientCompiler, stats);
     // stats.errors.forEach(err => console.error(err))
     // stats.warnings.forEach(err => console.warn(err))
     if (stats.errors.length) return

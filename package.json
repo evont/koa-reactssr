@@ -32,6 +32,7 @@
     "webpack-hot-middleware": "^2.24.3"
   },
   "devDependencies": {
-    "babel-plugin-transform-runtime": "^6.23.0"
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "react-hot-loader": "^4.3.12"
   }
 }

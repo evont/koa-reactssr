@@ -10,7 +10,7 @@ module.exports = {
     // 服务端没有浏览器缓存 hash没必要，同时要自己手动引入js
     filename: 'entry-server.js',
     path: path.join(__dirname, '../dist'),
-    publicPath: '/public',
+    publicPath: '/',
     libraryTarget: 'commonjs2'
   },
   module: {
