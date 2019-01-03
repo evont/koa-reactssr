@@ -8,7 +8,7 @@ var ref = require('chalk');
 var red = ref.red;
 var yellow = ref.yellow;
 
-var prefix = "[koa-server-renderer-webpack-plugin]";
+var prefix = "[react-server-renderer-webpack-plugin]";
 var warn = exports.warn = function (msg) { return console.error(red((prefix + " " + msg + "\n"))); };
 var tip = exports.tip = function (msg) { return console.log(yellow((prefix + " " + msg + "\n"))); };
 
@@ -29,15 +29,15 @@ var validate = function (compiler) {
   }
 };
 
-var VueSSRServerPlugin = function VueSSRServerPlugin (options) {
+var ReactSSRServerPlugin = function ReactSSRServerPlugin (options) {
   if ( options === void 0 ) options = {};
 
   this.options = Object.assign({
-    filename: 'koa-ssr-server-bundle.json'
+    filename: 'react-ssr-server-bundle.json'
   }, options);
 };
 
-VueSSRServerPlugin.prototype.apply = function apply (compiler) {
+ReactSSRServerPlugin.prototype.apply = function apply (compiler) {
     var this$1 = this;
 
   validate(compiler);
@@ -96,4 +96,4 @@ VueSSRServerPlugin.prototype.apply = function apply (compiler) {
   });
 };
 
-module.exports = VueSSRServerPlugin;
+module.exports = ReactSSRServerPlugin;

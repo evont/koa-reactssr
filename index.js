@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const ReactSSR = require('react-dom/server');
-// const LRU = require('lru-cache');
-// const log = require('./colorLog');
+const { createBundleRenderer } = require('react-server-renderer');
+const LRU = require('lru-cache');
+const log = require('./colorLog');
 /**
  * deep extend object
  * @param {object} obj original object
@@ -23,72 +23,101 @@ function extend(obj, obj2) {
   return newObj;
 }
 
-function render(content, ctx) {
+function createRenderer(bundle, distPath, options) {
+  return createBundleRenderer(
+      bundle,
+      Object.assign(options, {
+          basedir: distPath,
+          cache: LRU({
+            max: 1000,
+            maxAge: 1000 * 60 * 15
+          }),
+          runInNewContext: false
+      })
+  )
+}
+
+function render(renderer, title, ctx) {
   ctx.set('Content-Type', 'text/html')
-  // const handleError = err => {
-  //   if (err.url) {
-  //     ctx.redirect(err.url)
-  //   } else if(err.code === 404) {
-  //     // ctx.throw(404, '404 | Page Not Found')
-  //     ctx.body = 'Page Not Found';
-  //   } else {
-  //     // Render Error Page or Redirect
-  //    //  ctx.throw(500, '500 | Internal Server Error')
-  //     console.error(err);
-  //     ctx.body = 'Internal Server Error';
-  //   }
-  // }
+  const handleError = err => {
+    if (err.url) {
+      ctx.redirect(err.url)
+    } else if(err.code === 404) {
+      // ctx.throw(404, '404 | Page Not Found')
+      ctx.body = 'Page Not Found';
+    } else {
+      // Render Error Page or Redirect
+     //  ctx.throw(500, '500 | Internal Server Error')
+      console.error(err);
+      ctx.body = 'Internal Server Error';
+    }
+  }
   return new Promise((resolve, reject) => {
-    // const context = {
-    //   title,
-    //   url: ctx.url
-    // }
-    ctx.body = content;
-    resolve();
+    const context = {
+      title,
+      url: ctx.url
+    }
+    renderer.renderToString(context, (err, html) => {
+      if (err) {
+        
+        reject(err);
+      } else {
+        ctx.body = html;
+        resolve();
+      }
+    })
   }).catch((error) => {
     handleError(error);
   })
 }
 
-// let ssrconfig;
-// try {
-//   ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
-// } catch(e) {
-//   log.error('You need to have a .ssrconfig file in your root directory');
-//   throw new Error('no ssrconfig file')
-// }
+let ssrconfig;
+try {
+  ssrconfig = fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8');
+} catch(e) {
+  log.error('You need to have a .ssrconfig file in your root directory');
+  throw new Error('no ssrconfig file')
+}
 
-// ssrconfig = JSON.parse(ssrconfig);
+ssrconfig = JSON.parse(ssrconfig);
 
-const templatePath = path.resolve(__dirname, 'index.template.html');
+const templatePath = ssrconfig.template || path.resolve(__dirname, 'index.template.html');
 
-const distPath = path.resolve(process.cwd(), './dist');
+const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
 
-module.exports = (app, options) => {
+exports = module.exports = function(app, options = {}) {
   const defaultSetting = {
-    useLoadable: true, // use react-loadable by default
+    title: '', // default title for html
     isProd: false, // is Production Mode
   };
 
   const settings = extend(defaultSetting, options);
-  let content;
+  
+  let renderer;
   let readyPromise;
   if (!settings.isProd) {
-    readyPromise = require('./build/setup-dev-server')(
+    readyPromise = require('./config/setup-dev-server')(
       app,
       templatePath,
-      (bundle, template) => {
-        content = template.replace(/<!-- react app -->/, ReactSSR.renderToString(bundle));
+      (bundle, options) => {
+        renderer = createRenderer(bundle, distPath, options)
       }
     )
   }
   
   return async function ssr (ctx) {
     if (settings.isProd) {
-      ReactSSR.renderToString(bundle);
-      await render(settings.title, ctx);                                                                        
+      const template = fs.readFileSync(templatePath, 'utf-8');
+      const bundle = require(`${distPath}/vue-ssr-server-bundle.json`);
+      const clientManifest = require(`${distPath}/vue-ssr-client-manifest.json`);
+      renderer = createRenderer(bundle, distPath, {
+        template,
+        clientManifest
+      });
+      await render(renderer, settings.title, ctx);
     } else {
-      await readyPromise.then(() => render(content, ctx));
+      await readyPromise.then(() => render(renderer, settings.title, ctx));
     }
   }
 }
+

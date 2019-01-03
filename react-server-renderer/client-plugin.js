@@ -8,21 +8,21 @@ var ref = require('chalk');
 var red = ref.red;
 var yellow = ref.yellow;
 
-var prefix = "[koa-server-renderer-webpack-plugin]";
+var prefix = "[react-server-renderer-webpack-plugin]";
 var warn = exports.warn = function (msg) { return console.error(red((prefix + " " + msg + "\n"))); };
 var tip = exports.tip = function (msg) { return console.log(yellow((prefix + " " + msg + "\n"))); };
 
 var hash = require('hash-sum');
 var uniq = require('lodash.uniq');
-var VueSSRClientPlugin = function VueSSRClientPlugin (options) {
+var ReactSSRClientPlugin = function ReactSSRClientPlugin (options) {
   if ( options === void 0 ) options = {};
 
   this.options = Object.assign({
-    filename: 'koa-ssr-client-manifest.json'
+    filename: 'react-ssr-client-manifest.json'
   }, options);
 };
 
-VueSSRClientPlugin.prototype.apply = function apply (compiler) {
+ReactSSRClientPlugin.prototype.apply = function apply (compiler) {
     var this$1 = this;
 
   compiler.plugin('emit', function (compilation, cb) {
@@ -83,4 +83,4 @@ VueSSRClientPlugin.prototype.apply = function apply (compiler) {
   });
 };
 
-module.exports = VueSSRClientPlugin;
+module.exports = ReactSSRClientPlugin;

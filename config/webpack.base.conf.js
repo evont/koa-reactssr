@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const vueLoaderConfig = require('./vue-loader.conf')
+// const vueLoaderConfig = require('./vue-loader.conf')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
