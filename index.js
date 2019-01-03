@@ -23,19 +23,18 @@ function extend(obj, obj2) {
   return newObj;
 }
 
-function createRenderer(bundle, distPath, options) {
-  return createBundleRenderer(
-      bundle,
-      Object.assign(options, {
-          basedir: distPath,
-          cache: LRU({
-            max: 1000,
-            maxAge: 1000 * 60 * 15
-          }),
-          runInNewContext: false
-      })
-  )
-}
+const createRenderer = (bundle, distPath, options) =>
+  createBundleRenderer(bundle, {
+    ...options,
+    template,
+    basedir: distPath,
+    runInNewContext: false,
+    cache: LRU({
+      max: 1000,
+      maxAge: 1000 * 60 * 15
+    }),
+  })
+
 
 function render(renderer, title, ctx) {
   ctx.set('Content-Type', 'text/html')
@@ -66,6 +65,7 @@ function render(renderer, title, ctx) {
         resolve();
       }
     })
+    
   }).catch((error) => {
     handleError(error);
   })
@@ -84,7 +84,6 @@ ssrconfig = JSON.parse(ssrconfig);
 const templatePath = ssrconfig.template || path.resolve(__dirname, 'index.template.html');
 
 const distPath = path.resolve(process.cwd(), ssrconfig.output.path);
-
 exports = module.exports = function(app, options = {}) {
   const defaultSetting = {
     title: '', // default title for html
@@ -100,7 +99,9 @@ exports = module.exports = function(app, options = {}) {
       app,
       templatePath,
       (bundle, options) => {
-        renderer = createRenderer(bundle, distPath, options)
+        console.log('dong');
+        renderer = createRenderer(bundle, distPath, options);
+        console.log('ding', renderer);
       }
     )
   }
@@ -108,8 +109,8 @@ exports = module.exports = function(app, options = {}) {
   return async function ssr (ctx) {
     if (settings.isProd) {
       const template = fs.readFileSync(templatePath, 'utf-8');
-      const bundle = require(`${distPath}/vue-ssr-server-bundle.json`);
-      const clientManifest = require(`${distPath}/vue-ssr-client-manifest.json`);
+      const bundle = require(`${distPath}/react-ssr-server-bundle.json`);
+      const clientManifest = require(`${distPath}/react-ssr-client-manifest.json`);
       renderer = createRenderer(bundle, distPath, {
         template,
         clientManifest

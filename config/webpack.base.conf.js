@@ -38,13 +38,7 @@ module.exports = (isProd = true) => {
           test: /(\.jsx|\.js)$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader',
-            options: {
-              "presets": [
-                ["env", "react", "stage-0"]
-              ],
-              "plugins": ["transform-decorators-legacy", "transform-runtime"]
-            }            
+            loader: 'babel-loader',         
           }
         },
         {

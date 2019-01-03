@@ -1,37 +1,22 @@
-import React from 'react'
-import { AsyncComponentProvider } from 'react-async-component'
-import asyncBootstrapper from 'react-async-bootstrapper'
-import { hydrate } from 'react-dom'
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'connected-react-router'
+import React from 'react';
+import ReactDOM from 'react-dom';
+// import {AppContainer} from 'react-hot-loader';
+import App from './App.jsx';
 
-import createStore, { history } from 'store'
+// ReactDOM.hydrate(   <App />, document.getElementById('root'));
 
-import App from 'App'
-
-const store = createStore(window.__INITIAL_STATE__)
-
-const rehydrateState = window.ASYNC_COMPONENTS_STATE
-
-if (!__DEV__) {
-  delete window.__INITIAL_STATE__
-  delete window.ASYNC_COMPONENTS_STATE
+const root = document.getElementById('root');
+const render = Component => {
+  ReactDOM.hydrate(<Component />, root)
 }
 
-const render = () => {
-  const app = (
-    <AsyncComponentProvider rehydrateState={rehydrateState}>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </Provider>
-    </AsyncComponentProvider>
-  )
+render(App);
 
-  asyncBootstrapper(app).then(() =>
-    hydrate(app, document.getElementById('app')),
-  )
+if (module.hot) {
+  module
+    .hot
+    .accept('./App.jsx', () => {
+      const NextApp = require('./App.jsx').default;
+      render(NextApp);
+    })
 }
-
-render()

@@ -1,19 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="theme-color" content="#000000">
-    <title>React App</title>
+    <!-- chunks used for this render will be preloaded -->
+    <link rel="preload" href="/manifest.js" as="script">
+    <link rel="preload" href="/main.js" as="script">
+    <link rel="preload" href="/0.js" as="script">
+    <!-- unused async chunks will be prefetched (lower priority) -->
+    <link rel="prefetch" href="/1.js" as="script">
   </head>
   <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="root">
-      <!-- react app -->
-    </div>
-    <script src="/app.js"></script>
+    <!-- app content -->
+    <div data-server-rendered="true"><div>async</div></div>
+    <!-- manifest chunk should be first -->
+    <script src="/manifest.js"></script>
+    <!-- async chunks injected before main chunk -->
+    <script src="/0.js"></script>
+    <script src="/main.js"></script>
   </body>
-</html>
+</html>`
