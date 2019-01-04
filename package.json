@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rimraf dist && npm run build:client && npm run build:server",
+    "build:client": "cross-env NODE_ENV=production webpack --config config/webpack.client.conf.js --progress --hide-modules",
+    "build:server": "cross-env NODE_ENV=production webpack --config config/webpack.server.conf.js --progress --hide-modules"
   },
   "keywords": [
     "Koa",
@@ -21,15 +23,23 @@
     "@babel/register": "^7.0.0",
     "babel-loader": "^8.0.4",
     "babel-preset-env": "^1.7.0",
+    "connected-react-router": "^6.1.0",
+    "cross-env": "^5.2.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "koa": "^2.6.2",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
     "mini-css-extract-plugin": "^0.5.0",
     "react": "^16.6.3",
+    "react-async-bootstrapper": "^2.1.1",
+    "react-async-component": "^2.0.0",
     "react-dom": "^16.6.3",
     "react-loadable": "^5.5.0",
+    "react-redux": "^6.0.0",
+    "react-router": "^4.3.1",
     "react-server-renderer": "^1.1.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "sw-precache-webpack-plugin": "^0.11.5",
     "webpack": "^4.25.1",
     "webpack-dev-middleware": "^3.4.0",
@@ -39,6 +49,7 @@
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
-    "react-hot-loader": "^4.3.12"
+    "react-hot-loader": "^4.3.12",
+    "webpack-cli": "^3.2.0"
   }
 }

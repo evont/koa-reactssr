@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { createBundleRenderer } = require('react-server-renderer');
+const { createBundleRenderer } = require('./react-server-renderer');
 const LRU = require('lru-cache');
 const log = require('./colorLog');
 /**
@@ -23,18 +23,21 @@ function extend(obj, obj2) {
   return newObj;
 }
 
-const createRenderer = (bundle, distPath, options) =>
-  createBundleRenderer(bundle, {
-    ...options,
-    template,
-    basedir: distPath,
-    runInNewContext: false,
-    cache: LRU({
-      max: 1000,
-      maxAge: 1000 * 60 * 15
-    }),
-  })
-
+function createRenderer(bundle, distPath, options) {
+  const result = createBundleRenderer(
+      bundle,
+      {
+        ...options,
+        basedir: distPath,
+        runInNewContext: false,
+        cache: LRU({
+          max: 1000,
+          maxAge: 1000 * 60 * 15
+        }),
+      }
+  );
+  return result;
+}
 
 function render(renderer, title, ctx) {
   ctx.set('Content-Type', 'text/html')
@@ -54,7 +57,7 @@ function render(renderer, title, ctx) {
   return new Promise((resolve, reject) => {
     const context = {
       title,
-      url: ctx.url
+      ctx,
     }
     renderer.renderToString(context, (err, html) => {
       if (err) {
@@ -99,9 +102,7 @@ exports = module.exports = function(app, options = {}) {
       app,
       templatePath,
       (bundle, options) => {
-        console.log('dong');
         renderer = createRenderer(bundle, distPath, options);
-        console.log('ding', renderer);
       }
     )
   }

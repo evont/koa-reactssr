@@ -1,19 +1,24 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <!-- chunks used for this render will be preloaded -->
-    <link rel="preload" href="/manifest.js" as="script">
-    <link rel="preload" href="/main.js" as="script">
-    <link rel="preload" href="/0.js" as="script">
-    <!-- unused async chunks will be prefetched (lower priority) -->
-    <link rel="prefetch" href="/1.js" as="script">
+    <title>{{ title }}</title>
+    <meta charset="utf-8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <link rel="manifest" href="/manifest.json">
   </head>
   <body>
-    <!-- app content -->
-    <div data-server-rendered="true"><div>async</div></div>
-    <!-- manifest chunk should be first -->
-    <script src="/manifest.js"></script>
-    <!-- async chunks injected before main chunk -->
-    <script src="/0.js"></script>
-    <script src="/main.js"></script>
+    <div id="app"></div>
+    <script>
+      if(navigator && navigator.serviceWorker) {
+        navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+            console.log(registration)
+        }).catch(function (err) {
+            console.log(err)
+        })
+      }
+    </script>
   </body>
-</html>`
+</html>

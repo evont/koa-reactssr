@@ -1,0 +1,40 @@
+{
+  "publicPath": "/",
+  "all": [
+    "app.bda0d150ad05d3835ebd.js",
+    "manifest.db7b5ca62deefc94c863.js",
+    "vendor.10c6dbaf6b57293b0f3c.js"
+  ],
+  "initial": [
+    "manifest.db7b5ca62deefc94c863.js",
+    "vendor.10c6dbaf6b57293b0f3c.js",
+    "app.bda0d150ad05d3835ebd.js"
+  ],
+  "async": [],
+  "modules": {
+    "a0054e00": [
+      2
+    ],
+    "334acbfc": [
+      2
+    ],
+    "49c6ecab": [
+      2
+    ],
+    "6b764d26": [
+      2
+    ],
+    "310d38d2": [
+      2
+    ],
+    "74c397c4": [
+      2
+    ],
+    "21d30d65": [
+      2
+    ],
+    "38014c79": [
+      0
+    ]
+  }
+}

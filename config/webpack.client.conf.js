@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.conf')
-const ReactSSRClientPlugin = require('react-server-renderer/client-plugin')
+const ReactSSRClientPlugin = require('../react-server-renderer/client-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
@@ -34,7 +34,8 @@ module.exports = ((isProd = true) => {
     plugins: [
       // strip dev-only code in Vue source
       new webpack.DefinePlugin({
-        'process.env.REACT_ENV': '"client"'
+        'process.env.REACT_ENV': '"client"',
+        __SERVER__: false,
       }),
       new ReactSSRClientPlugin(),
     ]

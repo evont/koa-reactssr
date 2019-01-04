@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 // const vueLoaderConfig = require('./vue-loader.conf')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
 const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrconfig'), 'utf-8'));
@@ -9,6 +10,29 @@ const ssrconfig = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.ssrco
 function assetsPath(_path) {
   return path.posix.join(ssrconfig.output.path, _path)
 }
+
+const cssLoaders = (manualInject, options) => [
+  manualInject
+    ? {
+        loader: 'react-style-loader',
+        options: {
+          manualInject,
+        },
+      }
+    : MiniCssExtractPlugin.loader,
+  {
+    loader: 'css-loader',
+    options,
+  },
+  {
+    loader: 'postcss-loader',
+    options,
+  },
+  {
+    loader: 'sass-loader',
+    options,
+  },
+]
 
 module.exports = (isProd = true) => {
   return {
@@ -38,8 +62,38 @@ module.exports = (isProd = true) => {
           test: /(\.jsx|\.js)$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader',         
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/env',
+                  {
+                    modules: false,
+                    exclude: [
+                      'babel-plugin-transform-async-to-generator',
+                      'babel-plugin-transform-regenerator',
+                    ],
+                  },
+                ],
+              ],
+            }            
           }
+        },
+        {
+          test: /\.scss$/,
+          oneOf: [
+            {
+              test: /app.scss$/,
+              use: cssLoaders(false, {
+                sourceMap: isProd,
+              }),
+            },
+            {
+              use: cssLoaders(true, {
+                sourceMap: isProd,
+              }),
+            },
+          ],
         },
         {
           test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -75,11 +129,16 @@ module.exports = (isProd = true) => {
       ? [
           new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production'),
+            __DEV__: false,
+          }),
+          new MiniCssExtractPlugin({
+            filename: `[name].['contenthash'].css`,
           }),
         ]
       : [
           new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development'),
+            __DEV__: true,
           }),
           new FriendlyErrorsPlugin()
         ]
