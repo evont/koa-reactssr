@@ -19,15 +19,7 @@ export default context =>
 
     const store = createStore()
 
-    const app = (
-      <AsyncComponentProvider asyncContext={asyncContext}>
-        <Provider store={store}>
-          <StaticRouter location={ctx.url} context={context}>
-            <App />
-          </StaticRouter>
-        </Provider>
-      </AsyncComponentProvider>
-    )
+    const app = (<App />)
 
     try {
       await asyncBootstrapper(app)

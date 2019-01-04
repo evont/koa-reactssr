@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { createBundleRenderer } = require('./react-server-renderer');
+const { createBundleRenderer } = require('react-server-renderer');
 const LRU = require('lru-cache');
 const log = require('./colorLog');
 /**

@@ -1,8 +1,7 @@
+import PropTypes from 'prop-types'
 import React from 'react'
-export default class App extends React.PureComponent {
+export default class HomeView extends React.PureComponent {
   render() {
-    return (
-      <div>App FKSLJFAKDJdfadsfa上sa</div>
-    )
+    return <div>testfdsafadsf</div>
   }
 }

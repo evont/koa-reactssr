@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.conf')
-const ReactSSRClientPlugin = require('../react-server-renderer/client-plugin')
+const ReactSSRClientPlugin = require('react-server-renderer/client-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 

@@ -76,6 +76,11 @@ module.exports = (isProd = true) => {
                   },
                 ],
               ],
+              plugins: [
+                "dynamic-import-webpack",
+                "@babel/plugin-proposal-class-properties",
+                ["@babel/plugin-proposal-decorators", { "legacy": true }],
+              ]
             }            
           }
         },
@@ -137,7 +142,7 @@ module.exports = (isProd = true) => {
         ]
       : [
           new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development'),
+            'process.env.NODE_ENV': JSON.stringify('production'),
             __DEV__: true,
           }),
           new FriendlyErrorsPlugin()

@@ -1,6 +1,5 @@
 var reactServer = require("react-dom/server");
 var TemplateRenderer = require("./template-renderer");
-console.log(TemplateRenderer);
 var util = require("./util");
 function createRenderer(options) {
     if (options === void 0) { options = {}; }

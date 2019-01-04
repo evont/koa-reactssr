@@ -19,15 +19,7 @@ if (!__DEV__) {
 }
 
 const render = () => {
-  const app = (
-    <AsyncComponentProvider rehydrateState={rehydrateState}>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </Provider>
-    </AsyncComponentProvider>
-  )
+  const app = (<App />)
 
   asyncBootstrapper(app).then(() =>
     hydrate(app, document.getElementById('app')),
