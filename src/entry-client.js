@@ -1,17 +1,8 @@
 import React from 'react'
-import { AsyncComponentProvider } from 'react-async-component'
 import asyncBootstrapper from 'react-async-bootstrapper'
 import { hydrate } from 'react-dom'
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'connected-react-router'
-
-import createStore, { history } from './store'
 
 import App from './App'
-
-const store = createStore(window.__INITIAL_STATE__)
-
-const rehydrateState = window.ASYNC_COMPONENTS_STATE
 
 if (!__DEV__) {
   delete window.__INITIAL_STATE__
